@@ -1,5 +1,7 @@
 debug: true
 
+max-batch-size: 10
+
 # Database configuration settings
 # Supported types: SQLITE, MARIADB, MYSQL
 database:

@@ -17,6 +17,7 @@ public enum Messages implements Loadable {
 
     INVALID_AMOUNT("<red>Amount must be greater than 0."),
     KEYS_GIVEN("<green>Gave x<amount> key(s) for the crate <crate> to <player>."),
+    KEYS_GIVEN_ALL("<green>Gave x<amount> key(s) for the crate <crate> to <count> online player(s)."),
 
     // Placed crates messages
     CRATE_PLACED("<green>Successfully placed crate '<crate>' with display type <type>."),
@@ -36,6 +37,8 @@ public enum Messages implements Loadable {
     // Condition messages
     CONDITION_NO_PERMISSION("<red>You don't have permission to open this crate!"),
     CONDITION_COOLDOWN("<red>You must wait <time> before opening this crate again!"),
+
+    ALREADY_OPENING("<red>You are already opening a crate!")
     ;
 
     private final String rawMessage;

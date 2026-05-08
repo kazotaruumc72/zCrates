@@ -104,6 +104,32 @@ public non-sealed interface CratesManager extends Manager {
     // ==================== Reroll System ====================
 
     /**
+     * Opens a crate multiple times for a player without triggering any animation.
+     *
+     * <p>Each opening validates key + conditions, fires {@link fr.traqueur.crates.api.events.CratePreOpenEvent},
+     * consumes the key, generates a reward, logs it, gives it immediately, and fires
+     * {@link fr.traqueur.crates.api.events.RewardGivenEvent}. Stops early if keys run out,
+     * a condition fails, or the pre-open event is cancelled.
+     * The amount is capped by {@link Crate#maxBatchSize()}.</p>
+     *
+     * @param player the player opening
+     * @param crate  the crate to open
+     * @param amount desired number of openings (capped by crate.maxBatchSize())
+     * @return number of successful openings
+     */
+    int batchOpenCrate(Player player, Crate crate, int amount);
+
+    /**
+     * Opens a crate the maximum allowed number of times for a player without animation.
+     * Uses the crate's own max-batch-size if set, otherwise falls back to the global config value.
+     *
+     * @param player the player opening
+     * @param crate  the crate to open
+     * @return number of successful openings
+     */
+    int batchOpenCrate(Player player, Crate crate);
+
+    /**
      * Checks if a player can reroll their current reward.
      *
      * <p>A player can reroll if:</p>

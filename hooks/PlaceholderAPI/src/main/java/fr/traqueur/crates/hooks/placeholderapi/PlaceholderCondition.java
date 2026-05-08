@@ -1,7 +1,7 @@
 package fr.traqueur.crates.hooks.placeholderapi;
 
+import fr.traqueur.crates.api.models.crates.Condition;
 import fr.traqueur.crates.api.models.crates.Crate;
-import fr.traqueur.crates.api.models.crates.OpenCondition;
 import fr.traqueur.crates.api.providers.PlaceholderProvider;
 import org.bukkit.entity.Player;
 
@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public record PlaceholderCondition(String placeholder,
                                    @ComparisonType.Default ComparisonType comparison,
-                                   String result) implements OpenCondition {
+                                   String result) implements Condition {
     @Override
     public boolean check(Player player, Crate crate) {
         String placeholderValue = PlaceholderProvider.parsePlaceholders(player, placeholder);

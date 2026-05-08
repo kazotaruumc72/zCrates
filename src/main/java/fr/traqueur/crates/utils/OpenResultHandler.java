@@ -1,8 +1,8 @@
 package fr.traqueur.crates.utils;
 
 import fr.traqueur.crates.Messages;
+import fr.traqueur.crates.api.models.crates.Condition;
 import fr.traqueur.crates.api.models.crates.Crate;
-import fr.traqueur.crates.api.models.crates.OpenCondition;
 import fr.traqueur.crates.api.models.crates.OpenResult;
 import fr.traqueur.crates.models.conditions.CooldownCondition;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -28,7 +28,7 @@ public class OpenResultHandler {
         switch (result.status()) {
             case NO_KEY -> Messages.NO_KEY.send(player);
             case CONDITION_FAILED -> {
-                OpenCondition condition = result.failedCondition();
+                Condition condition = result.failedCondition();
                 if (condition == null) {
                     return;
                 }
@@ -45,6 +45,9 @@ public class OpenResultHandler {
                         }
                     }
                 }
+            }
+            case ALREADY_OPENING -> {
+                Messages.ALREADY_OPENING.send(player);
             }
             case EVENT_CANCELLED -> {} // No message for cancelled events
             case SUCCESS -> {} // Should not happen

@@ -4,7 +4,7 @@ import fr.traqueur.crates.api.CratesPlugin;
 import fr.traqueur.crates.api.Logger;
 import fr.traqueur.crates.api.annotations.AutoHook;
 import fr.traqueur.crates.api.hooks.Hook;
-import fr.traqueur.crates.api.models.crates.OpenCondition;
+import fr.traqueur.crates.api.models.crates.Condition;
 import fr.traqueur.crates.api.providers.PlaceholderProvider;
 import fr.traqueur.structura.registries.DefaultValueRegistry;
 import fr.traqueur.structura.registries.PolymorphicRegistry;
@@ -25,7 +25,7 @@ public class PAPIHook implements Hook, PlaceholderProvider {
         PlaceholderProvider.Holder.setInstance(this);
         new CratesExpansion(plugin).register();
         DefaultValueRegistry.getInstance().register(ComparisonType.class, ComparisonType.Default.class, ComparisonType.Default::value);
-        PolymorphicRegistry.get(OpenCondition.class).register("PLACEHOLDER", PlaceholderCondition.class);
+        PolymorphicRegistry.get(Condition.class).register("PLACEHOLDER", PlaceholderCondition.class);
         Logger.info("PlaceholderAPI hook enabled. Registered PLACEHOLDER open condition, and PlaceholderProvider and placeholders expansion.");
     }
 

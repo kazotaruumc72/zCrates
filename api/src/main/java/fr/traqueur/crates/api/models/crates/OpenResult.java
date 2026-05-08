@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
  * @param status The status of the open attempt.
  * @param failedCondition The condition that failed, if any.
  */
-public record OpenResult(Status status, @Nullable OpenCondition failedCondition) {
+public record OpenResult(Status status, @Nullable Condition failedCondition) {
 
     /**
      * Possible statuses for crate opening attempts.
@@ -28,7 +28,12 @@ public record OpenResult(Status status, @Nullable OpenCondition failedCondition)
         /**
          * The crate opening was cancelled by an event.
          */
-        EVENT_CANCELLED
+        EVENT_CANCELLED,
+
+        /**
+         * The crate is already being opened by the player.
+         */
+        ALREADY_OPENING,
     }
 
     /**
@@ -52,8 +57,12 @@ public record OpenResult(Status status, @Nullable OpenCondition failedCondition)
      * @param condition The condition that failed.
      * @return An OpenResult indicating a condition failure.
      */
-    public static OpenResult conditionFailed(OpenCondition condition) {
+    public static OpenResult conditionFailed(Condition condition) {
         return new OpenResult(Status.CONDITION_FAILED, condition);
+    }
+
+    public static OpenResult alreadyOpening() {
+        return new OpenResult(Status.ALREADY_OPENING, null);
     }
 
     /**

@@ -4,8 +4,10 @@ import fr.traqueur.crates.api.Logger;
 import fr.traqueur.crates.api.models.animations.Animation;
 import fr.traqueur.crates.api.models.animations.AnimationContext;
 import fr.traqueur.crates.api.models.animations.AnimationPhase;
+import fr.traqueur.crates.api.registries.HookActionsRegistry;
 import fr.traqueur.crates.engine.ZScriptEngine;
 import fr.traqueur.crates.models.ZAnimation;
+import fr.traqueur.crates.models.wrappers.JSAnimationContext;
 import org.mozilla.javascript.*;
 
 import java.util.ArrayList;
@@ -17,11 +19,13 @@ public class AnimationsRegistrar {
 
         private final String sourceFile;
         private final ZScriptEngine engine;
+        private final HookActionsRegistry hookActionsRegistry;
         private final List<Animation> animations;
 
-        public AnimationsRegistrar(String sourceFile, ZScriptEngine engine) {
+        public AnimationsRegistrar(String sourceFile, ZScriptEngine engine, HookActionsRegistry hookActionsRegistry) {
             this.sourceFile = sourceFile;
             this.engine = engine;
+            this.hookActionsRegistry = hookActionsRegistry;
             this.animations = new ArrayList<>();
         }
 
@@ -97,7 +101,10 @@ public class AnimationsRegistrar {
         private Consumer<AnimationContext> extractConsumer(Scriptable obj, String key) {
             Object value = ScriptableObject.getProperty(obj, key);
             if (value != Scriptable.NOT_FOUND && value instanceof Function jsFunction) {
-                return context -> engine.executeFunction(jsFunction, context);
+                return animCtx -> {
+                    JSAnimationContext jsCtx = new JSAnimationContext(animCtx, hookActionsRegistry);
+                    engine.executeFunction(jsFunction, jsCtx);
+                };
             }
             return null;
         }
@@ -105,7 +112,10 @@ public class AnimationsRegistrar {
         private BiConsumer<AnimationContext, AnimationPhase.TickData> extractBiConsumer(Scriptable obj, String key) {
             Object value = ScriptableObject.getProperty(obj, key);
             if (value != Scriptable.NOT_FOUND && value instanceof Function jsFunction) {
-                return (context, tickData) -> engine.executeFunction(jsFunction, context, tickData);
+                return (animCtx, tickData) -> {
+                    JSAnimationContext jsCtx = new JSAnimationContext(animCtx, hookActionsRegistry);
+                    engine.executeFunction(jsFunction, jsCtx, tickData);
+                };
             }
             return null;
         }

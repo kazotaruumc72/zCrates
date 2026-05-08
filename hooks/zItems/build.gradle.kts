@@ -4,5 +4,5 @@ repositories {
 }
 
 dependencies {
-    compileOnly("fr.traqueur:zitems-api:1b9d3e0")
+    compileOnly("fr.traqueur:zitems-api:1.0.0-SNAPSHOT")
 }

@@ -33,3 +33,5 @@ reroll-success: "<green>Rerolled! <gray>(<remaining> rerolls left)!"
 
 condition-no-permission: "<red>You don't have permission to open this crate!"
 condition-cooldown: "<red>You must wait <time> before opening this crate again!"
+
+already-opening: "<red>You are already opening a crate!"

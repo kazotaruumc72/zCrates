@@ -39,8 +39,6 @@ public class ZScriptEngine {
      */
     public ZScriptEngine(String engineName) {
         this.engineName = engineName;
-        Logger.info("Initializing secure {} engine...", engineName);
-
         this.rhinoContext = Context.enter();
         rhinoContext.setOptimizationLevel(-1);
         rhinoContext.setLanguageVersion(Context.VERSION_ES6);

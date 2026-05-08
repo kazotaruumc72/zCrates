@@ -15,7 +15,7 @@ import fr.traqueur.crates.api.models.algorithms.RandomAlgorithm;
 import fr.traqueur.crates.api.models.animations.Animation;
 import fr.traqueur.crates.api.models.crates.Crate;
 import fr.traqueur.crates.api.models.crates.Key;
-import fr.traqueur.crates.api.models.crates.OpenCondition;
+import fr.traqueur.crates.api.models.crates.Condition;
 import fr.traqueur.crates.api.models.crates.Reward;
 import fr.traqueur.crates.api.models.placedcrates.DisplayType;
 import fr.traqueur.crates.api.registries.*;
@@ -52,6 +52,7 @@ import fr.traqueur.crates.storage.repositories.UserRepository;
 import fr.traqueur.crates.views.buttons.AnimationButton;
 import fr.traqueur.crates.views.buttons.PreviewButton;
 import fr.traqueur.crates.views.buttons.RerollButton;
+import fr.traqueur.crates.views.loaders.PreviewLoader;
 import fr.traqueur.structura.api.Structura;
 import fr.traqueur.structura.exceptions.StructuraException;
 import fr.traqueur.structura.registries.CustomReaderRegistry;
@@ -83,10 +84,17 @@ public class zCrates extends CratesPlugin {
     private DatabaseConnection databaseConnection;
 
     @Override
+    public void onLoad() {
+        this.scriptEngine = new ZScriptEngine("zcrates-scripts");
+        this.registerRegistries();
+        this.injectPolymorphismAdapters();
+        this.injectReaders();
+    }
+
+    @Override
     public void onEnable() {
         long enableTime = System.currentTimeMillis();
         this.saveDefaultConfig();
-        this.injectPolymorphismAdapters();
 
         PluginSettings settings = this.createSettings(CONFIG_FILE, PluginSettings.class);
         Logger.init(logger, settings.debug());
@@ -102,16 +110,11 @@ public class zCrates extends CratesPlugin {
         Keys.initialize(this);
         MessagesService.initialize(this);
 
-        this.injectReaders();
         this.reloadConfig();
-
-        this.scriptEngine = new ZScriptEngine("zcrates-scripts");
 
         this.populateInventoriesRelatedStuffs();
 
         this.injectButtons();
-
-        this.registerRegistries();
 
         this.populateRegistries();
 
@@ -175,12 +178,14 @@ public class zCrates extends CratesPlugin {
     }
 
     private void registerRegistries() {
+        Registry.register(HookActionsRegistry.class, new ZHookActionsRegistry());
         Registry.register(AnimationsRegistry.class, new ZAnimationRegistry(this, this.scriptEngine, ANIMATIONS_FOLDER));
         Registry.register(RandomAlgorithmsRegistry.class, new ZRandomAlgorithmRegistry(this, this.scriptEngine, ALGORITHMS_FOLDER));
         Registry.register(CratesRegistry.class, new ZCratesRegistry(this, CRATES_FOLDER));
         Registry.register(ItemsProvidersRegistry.class, new ZItemsProviderRegistry());
         Registry.register(HooksRegistry.class, new ZHooksRegistry());
         Registry.register(CrateDisplayFactoriesRegistry.class, new ZCrateDisplayFactoriesRegistry());
+        Registry.register(RewardSortersRegistry.class, new ZRewardSortersRegistry());
     }
 
     private void injectPolymorphismAdapters() {
@@ -202,7 +207,7 @@ public class zCrates extends CratesPlugin {
             registry.register("PHYSIC", PhysicKey.class);
         });
 
-        PolymorphicRegistry.create(OpenCondition.class, registry -> {
+        PolymorphicRegistry.create(Condition.class, registry -> {
             registry.register("PERMISSION", PermissionCondition.class);
             registry.register("COOLDOWN", CooldownCondition.class);
         });
@@ -216,7 +221,7 @@ public class zCrates extends CratesPlugin {
     private void injectButtons() {
         if(this.buttonManager != null) {
             this.buttonManager.register(new NoneLoader(this, AnimationButton.class, "ZCRATES_ANIMATION"));
-            this.buttonManager.register(new NoneLoader(this, PreviewButton.class, "ZCRATES_PREVIEW"));
+            this.buttonManager.register(new PreviewLoader(this, "ZCRATES_PREVIEW"));
             this.buttonManager.register(new NoneLoader(this, RerollButton.class, "ZCRATES_REROLL"));
         }
     }

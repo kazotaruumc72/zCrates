@@ -7,6 +7,7 @@ import fr.traqueur.crates.api.settings.models.ItemStackWrapper;
 
 import java.util.List;
 
+
 /**
  * Represents a crate configuration that can be opened by players to receive rewards.
  *
@@ -45,7 +46,7 @@ import java.util.List;
  * @see Reward
  * @see Key
  * @see Animation
- * @see OpenCondition
+ * @see Condition
  */
 public interface Crate {
 
@@ -119,15 +120,24 @@ public interface Crate {
     int maxRerolls();
 
     /**
+     * Gets the maximum number of openings allowed in a single batch open.
+     *
+     * <p>A value of 0 disables batch opening for this crate.</p>
+     *
+     * @return the maximum batch size
+     */
+    int maxBatchSize();
+
+    /**
      * Gets the conditions that must be met to open this crate.
      *
      * <p>All conditions must pass before the crate can be opened.
      * Common conditions include permissions and cooldowns.</p>
      *
      * @return the list of conditions, empty if no conditions
-     * @see OpenCondition
+     * @see Condition
      */
-    List<OpenCondition> conditions();
+    List<Condition> conditions();
 
     /**
      * Gets a random item to display in menus (preview filler).
@@ -138,6 +148,13 @@ public interface Crate {
      * @return a random display item from the rewards list
      */
     ItemStackWrapper randomDisplay();
+
+    /**
+     * Gets whether this crate instantly gives the reward without opening any menu or animation.
+     *
+     * @return true if the crate skips the animation and gives the reward immediately
+     */
+    boolean instantReward();
 
     /**
      * Generates a reward for a user using the configured algorithm.

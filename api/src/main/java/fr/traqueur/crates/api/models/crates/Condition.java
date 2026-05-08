@@ -5,11 +5,11 @@ import fr.traqueur.structura.api.Loadable;
 import org.bukkit.entity.Player;
 
 /**
- * Represents a condition that must be met before opening a crate.
+ * Represents a condition that must be met before opening a crate or obtaining a reward.
  * Implementations can check permissions, cooldowns, or any other requirement.
  */
 @Polymorphic
-public interface OpenCondition extends Loadable {
+public interface Condition extends Loadable {
 
     /**
      * Checks if the player meets this condition.
@@ -23,6 +23,7 @@ public interface OpenCondition extends Loadable {
     /**
      * Called when the player successfully opens the crate.
      * Use this for side effects like setting cooldowns.
+     * Only relevant for crate-level conditions.
      *
      * @param player the player who opened the crate
      * @param crate the crate that was opened

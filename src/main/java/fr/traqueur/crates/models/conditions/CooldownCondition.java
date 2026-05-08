@@ -1,14 +1,14 @@
 package fr.traqueur.crates.models.conditions;
 
 import fr.traqueur.crates.api.CratesPlugin;
+import fr.traqueur.crates.api.models.crates.Condition;
 import fr.traqueur.crates.api.models.crates.Crate;
-import fr.traqueur.crates.api.models.crates.OpenCondition;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-public record CooldownCondition(long cooldown) implements OpenCondition {
+public record CooldownCondition(long cooldown) implements Condition {
 
     private static final CratesPlugin PLUGIN = CratesPlugin.getPlugin(CratesPlugin.class);
 

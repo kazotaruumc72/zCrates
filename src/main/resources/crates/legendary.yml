@@ -8,6 +8,8 @@ display-name: "<gradient:#FFD700:#FF0000>Legendary Crate</gradient>"
 
 max-rerolls: 5
 
+max-batch-size: 10
+
 key:
   type: PHYSIC
   name: legendary-key

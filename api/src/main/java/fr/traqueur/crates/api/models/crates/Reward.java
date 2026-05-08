@@ -5,6 +5,8 @@ import fr.traqueur.structura.annotations.Polymorphic;
 import fr.traqueur.structura.api.Loadable;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 /**
  * Represents a reward that can be won from a crate.
  *
@@ -81,6 +83,19 @@ public interface Reward extends Loadable {
      * @return the display item configuration
      */
     ItemStackWrapper displayItem();
+
+    /**
+     * Gets the conditions that must be met for this reward to be eligible.
+     *
+     * <p>If any condition is not met for the player, the reward's effective weight
+     * is treated as 0 (never selected, shown as 0% in preview).</p>
+     *
+     * @return the list of conditions, empty if no conditions
+     * @see Condition
+     */
+    default List<Condition> conditions() {
+        return List.of();
+    }
 
     /**
      * Gives this reward to a player.

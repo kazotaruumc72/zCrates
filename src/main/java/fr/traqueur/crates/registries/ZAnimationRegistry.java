@@ -5,6 +5,8 @@ import fr.traqueur.crates.api.CratesPlugin;
 import fr.traqueur.crates.api.Logger;
 import fr.traqueur.crates.api.models.animations.Animation;
 import fr.traqueur.crates.api.registries.AnimationsRegistry;
+import fr.traqueur.crates.api.registries.HookActionsRegistry;
+import fr.traqueur.crates.api.registries.Registry;
 import fr.traqueur.crates.engine.ZScriptEngine;
 import fr.traqueur.crates.models.wrappers.ArrayHelper;
 import org.mozilla.javascript.*;
@@ -29,7 +31,8 @@ public class ZAnimationRegistry extends AnimationsRegistry {
             Logger.debug("Loading animation from: {}", file.getFileName());
 
             // Create a capture context to intercept animation registrations
-            AnimationsRegistrar registrar = new AnimationsRegistrar(file.toString(), engine);
+            HookActionsRegistry hookActionsRegistry = Registry.get(HookActionsRegistry.class);
+            AnimationsRegistrar registrar = new AnimationsRegistrar(file.toString(), engine, hookActionsRegistry);
 
             // Create secure scope
             Scriptable scope = engine.createSecureScope();

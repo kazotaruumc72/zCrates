@@ -88,7 +88,11 @@ public record CratesListener(CratesManager cratesManager) implements Listener {
             previewPlacedCrate(player, placedCrate);
         } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             event.setCancelled(true);
-            openPlacedCrate(player, placedCrate);
+            if (player.isSneaking()) {
+                batchOpenPlacedCrate(player, placedCrate);
+            } else {
+                openPlacedCrate(player, placedCrate);
+            }
         }
     }
 
@@ -111,7 +115,11 @@ public record CratesListener(CratesManager cratesManager) implements Listener {
         PlacedCrate placedCrate = placedCrateOpt.get();
         Player player = event.getPlayer();
 
-        openPlacedCrate(player, placedCrate);
+        if (player.isSneaking()) {
+            batchOpenPlacedCrate(player, placedCrate);
+        } else {
+            openPlacedCrate(player, placedCrate);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -148,6 +156,13 @@ public record CratesListener(CratesManager cratesManager) implements Listener {
         if (result.isError()) {
             OpenResultHandler.getInstance().sendError(player, crate, result);
         }
+    }
+
+    private void batchOpenPlacedCrate(Player player, PlacedCrate placedCrate) {
+        CratesRegistry cratesRegistry = Registry.get(CratesRegistry.class);
+        Crate crate = cratesRegistry.getById(placedCrate.crateId());
+        if (crate == null) return;
+        cratesManager.batchOpenCrate(player, crate);
     }
 
     private void previewPlacedCrate(Player player, PlacedCrate placedCrate) {
